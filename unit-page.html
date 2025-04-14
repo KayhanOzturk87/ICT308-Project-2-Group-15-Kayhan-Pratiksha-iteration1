@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Introduction to Computer Science - Crown Institute</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body class="bg-gray-50">
+    <!-- Top Navigation -->
+    <nav class="bg-[#0B1F51] text-white shadow-lg">
+        <div class="max-w-full px-4 mx-auto">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center space-x-8">
+                    <a href="#" class="text-xl font-semibold">Introduction to Computer Science</a>
+                    <div class="hidden md:flex space-x-4">
+                        <a href="#" class="px-3 py-2 text-white hover:text-[#FFB800]">Home</a>
+                        <a href="#" class="px-3 py-2 text-white hover:text-[#FFB800]">Assignments</a>
+                        <a href="quiz.html" class="px-3 py-2 text-white hover:text-[#FFB800]">Quiz</a>
+                        <a href="#" class="px-3 py-2 text-white hover:text-[#FFB800]">Discussion</a>
+                        <a href="#" class="px-3 py-2 text-white hover:text-[#FFB800]">Grades</a>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <button class="text-white hover:text-[#FFB800]">
+                        <i class="fas fa-bell text-xl"></i>
+                    </button>
+                    <button class="text-white hover:text-[#FFB800]">
+                        <i class="fas fa-user-circle text-xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="flex min-h-screen">
+        <!-- Left Sidebar -->
+        <div class="w-64 bg-[#0B1F51] text-white">
+            <div class="p-4">
+            <div id="sidebar" class="space-y-2">
+                <!-- Units will be loaded here -->
+            </div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="flex-1 p-8">
+            <div class="max-w-4xl mx-auto">
+                <h1 class="text-3xl font-bold text-[#0B1F51] mb-6">Welcome to Introduction to Computer Science</h1>
+                <p class="text-gray-600 mb-8">
+                    This course will introduce you to the fundamental concepts of computer science. We'll explore algorithms, data structures, and basic programming principles.
+                </p>
+
+                <!-- Course Content -->
+                <div id="courseContent" class="space-y-8">
+                    <!-- Course content will be loaded dynamically -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- AI Chatbot -->
+    <div class="fixed bottom-4 right-4 z-50">
+        <div id="chatbot" class="bg-white rounded-lg shadow-lg w-96 hidden">
+            <div class="bg-[#0B1F51] text-white p-4 rounded-t-lg flex justify-between items-center">
+                <h3 class="font-semibold">Subject Assistant</h3>
+                <button onclick="toggleChatbot()" class="text-white hover:text-gray-200">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div id="chatMessages" class="h-96 overflow-y-auto p-4 space-y-4">
+                <!-- Chat messages will appear here -->
+            </div>
+            <div class="p-4 border-t">
+                <div class="flex space-x-2">
+                    <input type="text" id="chatInput" placeholder="Ask a question..." class="flex-1 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <button onclick="sendMessage()" class="px-4 py-2 bg-[#0B1F51] text-white rounded-lg hover:bg-[#0a1b45]">
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <button onclick="toggleChatbot()" class="bg-[#FFB800] text-[#0B1F51] p-4 rounded-full shadow-lg hover:bg-[#e5a600] float-right" id="chatbotToggle">
+            <i class="fas fa-comment-dots text-2xl"></i>
+        </button>
+    </div>
+
+    <script>
+        // Chatbot functionality
+        function toggleChatbot() {
+            const chatbot = document.getElementById('chatbot');
+            const chatbotToggle = document.getElementById('chatbotToggle');
+            chatbot.classList.toggle('hidden');
+            chatbotToggle.classList.toggle('hidden');
+        }
+
+        function addBotMessage(message) {
+            const chatMessages = document.getElementById('chatMessages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'flex items-start space-x-2';
+            messageDiv.innerHTML = `
+                <div class="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center">
+                    <i class="fas fa-robot text-white text-sm"></i>
+                </div>
+                <div class="bg-gray-100 rounded-lg p-3 max-w-[80%]">
+                    <p class="text-sm">${message}</p>
+                </div>
+            `;
+            chatMessages.appendChild(messageDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        function addUserMessage(message) {
+            const chatMessages = document.getElementById('chatMessages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'flex items-start space-x-2 justify-end';
+            messageDiv.innerHTML = `
+                <div class="bg-blue-600 text-white rounded-lg p-3 max-w-[80%]">
+                    <p class="text-sm">${message}</p>
+                </div>
+            `;
+            chatMessages.appendChild(messageDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        function sendMessage() {
+            const input = document.getElementById('chatInput');
+            const message = input.value.trim();
+            if (message) {
+                addUserMessage(message);
+                input.value = '';
+                
+                // Simulate bot response
+                setTimeout(() => {
+                    const response = getBotResponse(message);
+                    addBotMessage(response);
+                }, 1000);
+            }
+        }
+
+        function getBotResponse(message) {
+            const responses = {
+                'hello': 'Hi! How can I help you with your studies today?',
+                'help': 'I can help you with understanding course materials, assignments, and provide study tips. What would you like to know?',
+                'programming': 'What specific programming concept would you like to learn about? I can help with Python, Java, or general programming concepts.',
+                'database': 'I can help you understand database concepts, SQL queries, and database design principles. What\'s your question?',
+                'assignment': 'I can help you understand your assignments and provide guidance. Which subject is the assignment for?'
+            };
+
+            const lowerMessage = message.toLowerCase();
+            for (const [key, response] of Object.entries(responses)) {
+                if (lowerMessage.includes(key)) {
+                    return response;
+                }
+            }
+
+            return "I'm here to help with your studies. You can ask me about specific subjects, concepts, or assignments.";
+        }
+
+        // Initialize chatbot with welcome message
+        document.addEventListener('DOMContentLoaded', function() {
+            addBotMessage("Hello! I'm your Subject Assistant. How can I help you with your studies today?");
+        });
+
+        // Handle chat input with Enter key
+        document.getElementById('chatInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        });
+    </script>
+
+    <script>
+        // Initialize sample course data if not exists
+        if (!localStorage.getItem('courses')) {
+            const sampleCourses = [
+                {
+                    id: '1',
+                    title: 'Introduction to Programming',
+                    description: 'Learn the fundamentals of programming with Python.',
+                    units: ['Variables & Data Types', 'Control Structures', 'Functions', 'Object-Oriented Programming'],
+                    overview: [
+                        'Understanding basic programming concepts',
+                        'Introduction to algorithms and flowcharts',
+                        'Data types and variables',
+                        'Control structures and loops'
+                    ],
+                    objectives: [
+                        'Write basic programs using a high-level programming language',
+                        'Understand and implement simple algorithms',
+                        'Debug and troubleshoot code',
+                        'Apply problem-solving strategies to programming challenges'
+                    ]
+                },
+                {
+                    id: '2',
+                    title: 'UI/UX Design Fundamentals',
+                    description: 'Master the principles of user interface and experience design.',
+                    units: ['Design Principles', 'User Research', 'Wireframing', 'Prototyping'],
+                    overview: [
+                        'Understanding user-centered design principles',
+                        'Research methods and user analysis',
+                        'Information architecture and navigation',
+                        'Prototyping and usability testing'
+                    ],
+                    objectives: [
+                        'Create user-centered design solutions',
+                        'Conduct effective user research and analysis',
+                        'Design intuitive navigation and information structures',
+                        'Build and test interactive prototypes'
+                    ]
+                }
+            ];
+            localStorage.setItem('courses', JSON.stringify(sampleCourses));
+        }
+
+        // Get course ID from URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const courseId = urlParams.get('course');
+        
+        function loadDefaultSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            sidebar.innerHTML = `
+                <a href="#week1" class="block px-4 py-2 rounded hover:bg-[#FFB800] hover:text-[#0B1F51] transition-colors">Week 1</a>
+                <a href="#week2" class="block px-4 py-2 rounded hover:bg-[#FFB800] hover:text-[#0B1F51] transition-colors">Week 2</a>
+                <a href="#week3" class="block px-4 py-2 rounded hover:bg-[#FFB800] hover:text-[#0B1F51] transition-colors">Week 3</a>
+                <a href="#week4" class="block px-4 py-2 rounded hover:bg-[#FFB800] hover:text-[#0B1F51] transition-colors">Week 4</a>
+                <div class="border-t border-gray-600 my-4"></div>
+                <a href="#resources" class="block px-4 py-2 rounded hover:bg-[#FFB800] hover:text-[#0B1F51] transition-colors">Resources</a>
+                <a href="#announcements" class="block px-4 py-2 rounded hover:bg-[#FFB800] hover:text-[#0B1F51] transition-colors">Announcements</a>
+            `;
+        }
+        
+        // Load course data
+        document.addEventListener('DOMContentLoaded', function() {
+            const courses = JSON.parse(localStorage.getItem('courses')) || [];
+            const course = courses.find(c => c.id === courseId);
+            
+            if (course) {
+                // Update page title and header
+                document.title = `${course.title} - Crown Institute`;
+                document.querySelector('nav a.text-xl').textContent = course.title;
+                
+                // Update main content
+                document.querySelector('h1').textContent = `Welcome to ${course.title}`;
+                document.querySelector('p.text-gray-600').textContent = course.description;
+                
+                // Update course content
+                const courseContent = document.getElementById('courseContent');
+                courseContent.innerHTML = `
+                    <div class="bg-white p-6 rounded-lg shadow-md">
+                        <h2 class="text-2xl font-semibold text-[#0B1F51] mb-4">Course Overview</h2>
+                        <ul class="list-disc list-inside space-y-2 text-gray-600">
+                            ${course.overview.map(item => `<li>${item}</li>`).join('')}
+                        </ul>
+                    </div>
+
+                    <div class="bg-white p-6 rounded-lg shadow-md mt-8">
+                        <h2 class="text-2xl font-semibold text-[#0B1F51] mb-4">Learning Objectives</h2>
+                        <ul class="list-disc list-inside space-y-2 text-gray-600">
+                            ${course.objectives.map(item => `<li>${item}</li>`).join('')}
+                        </ul>
+                    </div>
+                `;
+                
+                // Update sidebar with units
+                const sidebar = document.getElementById('sidebar');
+                if (course.units && Array.isArray(course.units)) {
+                    let sidebarContent = course.units.map((unit, index) => `
+                        <a href="#week${index + 1}" 
+                           class="block px-4 py-2 rounded hover:bg-[#FFB800] hover:text-[#0B1F51] transition-colors">
+                            Week ${index + 1}: ${unit}
+                        </a>
+                    `).join('');
+                    
+                    // Add resources and announcements
+                    sidebarContent += `
+                        <div class="border-t border-gray-600 my-4"></div>
+                        <a href="#resources" class="block px-4 py-2 rounded hover:bg-[#FFB800] hover:text-[#0B1F51] transition-colors">Resources</a>
+                        <a href="#announcements" class="block px-4 py-2 rounded hover:bg-[#FFB800] hover:text-[#0B1F51] transition-colors">Announcements</a>
+                    `;
+                    
+                    sidebar.innerHTML = sidebarContent;
+                } else {
+                    loadDefaultSidebar();
+                }
+            } else {
+                // Handle invalid course ID
+                document.querySelector('h1').textContent = 'Course Not Found';
+                document.querySelector('p.text-gray-600').textContent = 'The requested course could not be found.';
+                loadDefaultSidebar();
+            }
+            
+            // Add active state to current week/section
+            const path = window.location.hash || '#week1';
+            const activeLink = document.querySelector(`a[href="${path}"]`);
+            if (activeLink) {
+                activeLink.classList.add('bg-[#FFB800]', 'text-[#0B1F51]');
+            }
+        });
+    </script>
+</body>
+</html>

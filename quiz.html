@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz - Crown Institute</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body class="bg-gray-50">
+    <!-- Navigation -->
+    <nav class="bg-[#0B1F51] shadow-lg">
+        <div class="max-w-6xl mx-auto px-4">
+            <div class="flex justify-between">
+                <div class="flex space-x-7">
+                    <a href="#" class="flex items-center py-2 px-2">
+                        <img src="pictures/Crown.jpg" alt="Crown Institute Logo" class="h-16 w-16">
+                        <div class="ml-2">
+                            <span class="font-bold text-xl text-white block">Crown Institute</span>
+                            <span class="text-sm text-[#FFB800] italic">From Possibility to Actuality</span>
+                        </div>
+                    </a>
+                </div>
+                <div class="hidden md:flex items-center space-x-1">
+                    <a href="student-dashboard.html" class="py-4 px-2 text-gray-300 font-semibold hover:text-white transition duration-300">Dashboard</a>
+                    <a href="courses.html" class="py-4 px-2 text-gray-300 font-semibold hover:text-white transition duration-300">Courses</a>
+                    <a href="quiz.html" class="py-4 px-2 text-white border-b-4 border-[#FFB800] font-semibold">Quiz</a>
+                    <div class="relative group">
+                        <button class="py-4 px-2 text-gray-300 font-semibold hover:text-white transition duration-300 flex items-center">
+                            <span>Account</span>
+                            <i class="fas fa-chevron-down ml-1 text-xs"></i>
+                        </button>
+                        <div class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-10 hidden group-hover:block">
+                            <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Profile</a>
+                            <a href="index.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" onclick="logout()">Logout</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Quiz Content -->
+    <div class="container mx-auto px-4 py-12">
+        <div class="max-w-2xl mx-auto">
+            <!-- Welcome Screen -->
+            <div id="welcomeScreen" class="bg-white rounded-lg shadow-md p-8 text-center">
+                <h1 class="text-3xl font-bold text-[#0B1F51] mb-6">Welcome to the Quiz</h1>
+                <p class="text-gray-600 mb-8">Test your knowledge with our interactive quiz!</p>
+                <button onclick="startQuiz()" class="bg-[#FFB800] text-[#0B1F51] font-semibold py-3 px-6 rounded-lg hover:bg-[#e5a600] transition duration-300">
+                    Start Quiz
+                </button>
+            </div>
+
+            <!-- Quiz Container -->
+            <div id="quizContainer" class="bg-white rounded-lg shadow-md p-8 hidden">
+                <div class="mb-8">
+                    <div class="flex justify-between items-center mb-4">
+                        <h2 id="questionText" class="text-2xl font-semibold text-[#0B1F51]"></h2>
+                        <span id="questionNumber" class="text-lg font-medium text-gray-600"></span>
+                    </div>
+                    <div id="optionsContainer" class="space-y-4"></div>
+                </div>
+                <div id="feedback" class="text-center py-4 font-semibold hidden"></div>
+            </div>
+
+            <!-- Results Screen -->
+            <div id="resultsScreen" class="bg-white rounded-lg shadow-md p-8 text-center hidden">
+                <h2 class="text-3xl font-bold text-[#0B1F51] mb-4">Quiz Completed!</h2>
+                <div id="scoreDisplay" class="text-xl text-gray-700 mb-6"></div>
+                <button onclick="location.reload()" class="bg-[#FFB800] text-[#0B1F51] font-semibold py-3 px-6 rounded-lg hover:bg-[#e5a600] transition duration-300">
+                    Try Again
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const questions = [
+            { q: "What is the capital of France?", options: ["Berlin", "Madrid", "Paris", "Rome"], answer: 2 },
+            { q: "What is 2 + 2?", options: ["3", "4", "5", "6"], answer: 1 },
+            { q: "What is the largest planet?", options: ["Earth", "Mars", "Jupiter", "Venus"], answer: 2 },
+            { q: "Who wrote 'Hamlet'?", options: ["Shakespeare", "Dickens", "Hemingway", "Austen"], answer: 0 },
+            { q: "What is the boiling point of water?", options: ["90°C", "100°C", "110°C", "120°C"], answer: 1 },
+            { q: "Which is the smallest continent?", options: ["Asia", "Australia", "Europe", "Antarctica"], answer: 1 },
+            { q: "What is the chemical symbol for Gold?", options: ["Au", "Ag", "Fe", "Hg"], answer: 0 },
+            { q: "How many continents are there?", options: ["5", "6", "7", "8"], answer: 2 },
+            { q: "Who discovered gravity?", options: ["Newton", "Einstein", "Galileo", "Darwin"], answer: 0 },
+            { q: "Which ocean is the largest?", options: ["Atlantic", "Indian", "Arctic", "Pacific"], answer: 3 }
+        ];
+
+        let currentQuestion = 0;
+        let score = 0;
+
+        function startQuiz() {
+            document.getElementById("welcomeScreen").classList.add("hidden");
+            document.getElementById("quizContainer").classList.remove("hidden");
+            showQuestion();
+        }
+
+        function showQuestion() {
+            const question = questions[currentQuestion];
+            document.getElementById("questionText").textContent = question.q;
+            document.getElementById("questionNumber").textContent = `Question ${currentQuestion + 1}/${questions.length}`;
+            
+            const optionsContainer = document.getElementById("optionsContainer");
+            optionsContainer.innerHTML = "";
+            
+            question.options.forEach((option, index) => {
+                const button = document.createElement("button");
+                button.className = "w-full text-left p-4 rounded-lg border border-gray-300 hover:bg-gray-50 transition duration-300";
+                button.onclick = () => checkAnswer(index);
+                button.textContent = option;
+                optionsContainer.appendChild(button);
+            });
+
+            document.getElementById("feedback").classList.add("hidden");
+        }
+
+        function checkAnswer(selected) {
+            const feedback = document.getElementById("feedback");
+            const buttons = document.querySelectorAll("#optionsContainer button");
+            
+            // Disable all buttons
+            buttons.forEach(button => button.disabled = true);
+            
+            if (selected === questions[currentQuestion].answer) {
+                score++;
+                feedback.textContent = "Correct! ✅";
+                feedback.className = "text-center py-4 font-semibold text-green-600";
+                buttons[selected].classList.add("bg-green-100", "border-green-500");
+            } else {
+                feedback.textContent = `Wrong ❌ Correct answer: ${questions[currentQuestion].options[questions[currentQuestion].answer]}`;
+                feedback.className = "text-center py-4 font-semibold text-red-600";
+                buttons[selected].classList.add("bg-red-100", "border-red-500");
+                buttons[questions[currentQuestion].answer].classList.add("bg-green-100", "border-green-500");
+            }
+            
+            feedback.classList.remove("hidden");
+            
+            setTimeout(() => {
+                currentQuestion++;
+                if (currentQuestion < questions.length) {
+                    showQuestion();
+                } else {
+                    showResults();
+                }
+            }, 2000);
+        }
+
+        function showResults() {
+            document.getElementById("quizContainer").classList.add("hidden");
+            document.getElementById("resultsScreen").classList.remove("hidden");
+            document.getElementById("scoreDisplay").textContent = `Your score: ${score} out of ${questions.length}`;
+        }
+
+        // Logout function
+        function logout() {
+            localStorage.removeItem('isLoggedIn');
+            localStorage.removeItem('userRole');
+            window.location.href = 'index.html';
+        }
+    </script>
+</body>
+</html>

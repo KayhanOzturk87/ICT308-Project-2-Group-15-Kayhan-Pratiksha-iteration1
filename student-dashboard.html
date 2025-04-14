@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Dashboard - Crown Institute</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body class="bg-gray-50">
+    <!-- Navigation -->
+    <nav class="bg-[#0B1F51] shadow-lg">
+        <div class="max-w-6xl mx-auto px-4">
+            <div class="flex justify-between">
+                <div class="flex space-x-7">
+                    <a href="#" class="flex items-center py-4 px-2">
+                        <span class="font-semibold text-white text-lg">Crown Institute</span>
+                    </a>
+                </div>
+                <div class="hidden md:flex items-center space-x-1">
+                    <a href="#" class="py-4 px-2 text-[#FFB800] border-b-4 border-[#FFB800] font-semibold">Dashboard</a>
+                    <a href="courses.html" class="py-4 px-2 text-gray-300 font-semibold hover:text-[#FFB800] transition duration-300">Courses</a>
+                    <a href="quiz.html" class="py-4 px-2 text-gray-300 font-semibold hover:text-[#FFB800] transition duration-300">Quiz</a>
+                    <div class="relative group">
+                        <button class="py-4 px-2 text-gray-500 font-semibold hover:text-blue-500 transition duration-300 flex items-center">
+                            <span>Account</span>
+                            <i class="fas fa-chevron-down ml-1 text-xs"></i>
+                        </button>
+                        <div class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-10 hidden group-hover:block">
+                            <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Profile</a>
+                            <a href="index.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" onclick="logout()">Logout</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Dashboard Content -->
+    <div class="container mx-auto px-4 py-8">
+        <div class="flex justify-between items-center mb-8">
+            <h1 class="text-3xl font-bold text-gray-800">My Learning Dashboard</h1>
+            <div class="text-sm text-gray-600" id="welcomeMessage"></div>
+        </div>
+
+        <!-- Dashboard Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <!-- Enrolled Courses -->
+            <div class="col-span-2">
+                <div class="bg-white rounded-lg shadow-md p-6">
+                    <h2 class="text-xl font-semibold mb-4">My Enrolled Courses</h2>
+                    <div class="space-y-4" id="enrolledCourses">
+                        <!-- Courses will be dynamically added here -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Progress Summary -->
+            <div>
+                <div class="bg-white rounded-lg shadow-md p-6">
+                    <h2 class="text-xl font-semibold mb-4">Learning Progress</h2>
+                    <div class="space-y-4" id="progressSummary">
+                        <!-- Progress stats will be added here -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Upcoming Assignments -->
+            <div class="col-span-2">
+                <div class="bg-white rounded-lg shadow-md p-6">
+                    <h2 class="text-xl font-semibold mb-4">Upcoming Assignments</h2>
+                    <div class="space-y-4" id="upcomingAssignments">
+                        <!-- Assignments will be dynamically added here -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Activity -->
+            <div>
+                <div class="bg-white rounded-lg shadow-md p-6">
+                    <h2 class="text-xl font-semibold mb-4">Recent Activity</h2>
+                    <div class="space-y-4" id="recentActivity">
+                        <!-- Activity items will be added here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Available Courses -->
+        <div class="mt-8">
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8">
+                    <h2 class="text-xl font-semibold mb-4 md:mb-0">Available Courses</h2>
+                    
+                    <!-- Filters -->
+                    <div class="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-4 w-full md:w-auto">
+                        <div class="relative">
+                            <select id="categoryFilter" class="appearance-none bg-white border border-gray-300 rounded-md py-2 pl-3 pr-8 text-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                                <option value="all">All Categories</option>
+                                <option value="programming">Programming</option>
+                                <option value="design">Design</option>
+                                <option value="business">Business</option>
+                            </select>
+                            <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                                <i class="fas fa-chevron-down text-xs"></i>
+                            </div>
+                        </div>
+                        <button onclick="applyFilters()" class="bg-[#0B1F51] hover:bg-[#0a1b45] text-white font-medium py-2 px-4 rounded-md text-sm">
+                            Apply Filters
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Course Grid -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6" id="courseGrid">
+                    <!-- Courses will be dynamically inserted here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Enrollment Modal -->
+    <div id="enrollmentModal" class="fixed z-10 inset-0 overflow-y-auto hidden">
+        <div class="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+            <div class="fixed inset-0 transition-opacity" aria-hidden="true">
+                <div class="absolute inset-0 bg-gray-500 opacity-75"></div>
+            </div>
+            <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+            <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
+                <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+                    <h3 class="text-lg leading-6 font-medium text-gray-900 mb-4" id="modalTitle">Enroll in Course</h3>
+                    <p class="text-sm text-gray-500 mb-4" id="modalDescription">You are about to enroll in this course. Confirm to proceed.</p>
+                </div>
+                <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+                    <button type="button" onclick="confirmEnrollment()" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-[#0B1F51] text-base font-medium text-white hover:bg-[#0a1b45] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#0B1F51] sm:ml-3 sm:w-auto sm:text-sm">
+                        Confirm Enrollment
+                    </button>
+                    <button type="button" onclick="closeEnrollmentModal()" class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#0B1F51] sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
+                        Cancel
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- AI Chatbot -->
+    <div class="fixed bottom-4 right-4 z-50">
+        <div id="chatbot" class="bg-white rounded-lg shadow-lg w-96 hidden">
+            <div class="bg-[#0B1F51] text-white p-4 rounded-t-lg flex justify-between items-center">
+                <h3 class="font-semibold">Subject Assistant</h3>
+                <button onclick="toggleChatbot()" class="text-white hover:text-gray-200">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div id="chatMessages" class="h-96 overflow-y-auto p-4 space-y-4">
+                <!-- Chat messages will appear here -->
+            </div>
+            <div class="p-4 border-t">
+                <div class="flex space-x-2">
+                    <input type="text" id="chatInput" placeholder="Ask a question..." class="flex-1 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <button onclick="sendMessage()" class="px-4 py-2 bg-[#0B1F51] text-white rounded-lg hover:bg-[#0a1b45]">
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <button onclick="toggleChatbot()" class="bg-[#FFB800] text-[#0B1F51] p-4 rounded-full shadow-lg hover:bg-[#e5a600] float-right" id="chatbotToggle">
+            <i class="fas fa-comment-dots text-2xl"></i>
+        </button>
+    </div>
+
+    <script>
+        // Global variables
+        let selectedCourseId = null;
+
+        // Check authentication
+        document.addEventListener('DOMContentLoaded', function() {
+            if (!localStorage.getItem('isLoggedIn') || localStorage.getItem('userRole') !== 'student') {
+                window.location.href = 'login.html';
+                return;
+            }
+
+            // Load user data
+            const userData = JSON.parse(localStorage.getItem('userData') || '{}');
+            document.getElementById('welcomeMessage').textContent = `Welcome back, ${userData.fullname || 'Student'}!`;
+
+            // Load enrolled courses
+            loadEnrolledCourses();
+            loadProgressSummary();
+            loadUpcomingAssignments();
+            loadRecentActivity();
+            initializeChatbot();
+        });
+
+        function loadEnrolledCourses() {
+            const courses = [
+                {
+                    title: 'Introduction to Programming',
+                    progress: 75,
+                    instructor: 'Prof. John Smith',
+                    nextLesson: 'Functions and Methods',
+                    units: ['Variables & Data Types', 'Control Structures', 'Functions', 'Object-Oriented Programming']
+                },
+                {
+                    title: 'Database Management',
+                    progress: 45,
+                    instructor: 'Prof. Sarah Johnson',
+                    nextLesson: 'SQL Queries',
+                    units: ['Database Basics', 'SQL Fundamentals', 'Database Design', 'Data Modeling']
+                }
+            ];
+
+            const coursesContainer = document.getElementById('enrolledCourses');
+            coursesContainer.innerHTML = courses.map(course => `
+                <div class="border rounded-lg p-4 hover:shadow-md transition-shadow">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <h3 class="font-semibold text-lg">${course.title}</h3>
+                            <p class="text-gray-600">${course.instructor}</p>
+                            <p class="text-sm text-gray-500 mt-2">Next: ${course.nextLesson}</p>
+                            <div class="mt-3">
+                                <p class="text-sm font-semibold text-[#0B1F51] mb-2">Units:</p>
+                                <div class="space-y-2">
+                                    ${course.units.map((unit, index) => `
+                                        <a href="unit-page.html#week${index + 1}" 
+                                           class="block text-sm text-gray-600 hover:text-[#0B1F51] hover:bg-gray-50 p-1 rounded">
+                                            ${index + 1}. ${unit}
+                                        </a>
+                                    `).join('')}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <div class="text-[#0B1F51] font-semibold">${course.progress}%</div>
+                            <div class="w-20 h-2 bg-gray-200 rounded-full mt-2">
+                                <div class="h-full bg-[#0B1F51] rounded-full" style="width: ${course.progress}%"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <a href="unit-page.html" class="mt-4 w-full py-2 bg-[#0B1F51] text-white rounded hover:bg-[#0a1b45] transition-colors block text-center">
+                        Continue Learning
+                    </a>
+                </div>
+            `).join('');
+        }
+
+        function loadProgressSummary() {
+            const stats = {
+                coursesCompleted: 2,
+                assignmentsSubmitted: 15,
+                quizzesPassed: 8,
+                averageScore: 85
+            };
+
+            document.getElementById('progressSummary').innerHTML = `
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="text-center p-4 bg-gray-50 rounded-lg">
+                        <div class="text-2xl font-bold text-blue-600">${stats.coursesCompleted}</div>
+                        <div class="text-sm text-gray-600">Courses Completed</div>
+                    </div>
+                    <div class="text-center p-4 bg-gray-50 rounded-lg">
+                        <div class="text-2xl font-bold text-blue-600">${stats.assignmentsSubmitted}</div>
+                        <div class="text-sm text-gray-600">Assignments Done</div>
+                    </div>
+                    <div class="text-center p-4 bg-gray-50 rounded-lg">
+                        <div class="text-2xl font-bold text-blue-600">${stats.quizzesPassed}</div>
+                        <div class="text-sm text-gray-600">Quizzes Passed</div>
+                    </div>
+                    <div class="text-center p-4 bg-gray-50 rounded-lg">
+                        <div class="text-2xl font-bold text-blue-600">${stats.averageScore}%</div>
+                        <div class="text-sm text-gray-600">Average Score</div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function loadUpcomingAssignments() {
+            const assignments = [
+                {
+                    title: 'Database Design Project',
+                    dueDate: '2024-03-15',
+                    course: 'Database Management',
+                    status: 'pending'
+                },
+                {
+                    title: 'Programming Exercise 3',
+                    dueDate: '2024-03-18',
+                    course: 'Introduction to Programming',
+                    status: 'in-progress'
+                }
+            ];
+
+            document.getElementById('upcomingAssignments').innerHTML = assignments.map(assignment => `
+                <div class="flex items-center justify-between border-b pb-4">
+                    <div>
+                        <h3 class="font-semibold">${assignment.title}</h3>
+                        <p class="text-sm text-gray-600">${assignment.course}</p>
+                        <p class="text-sm text-gray-500">Due: ${assignment.dueDate}</p>
+                    </div>
+                    <button class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors">
+                        ${assignment.status === 'pending' ? 'Start' : 'Continue'}
+                    </button>
+                </div>
+            `).join('');
+        }
+
+        function loadRecentActivity() {
+            const activities = [
+                {
+                    type: 'quiz',
+                    title: 'Completed SQL Basics Quiz',
+                    time: '2 hours ago'
+                },
+                {
+                    type: 'lesson',
+                    title: 'Watched Python Functions Tutorial',
+                    time: '1 day ago'
+                }
+            ];
+
+            document.getElementById('recentActivity').innerHTML = activities.map(activity => `
+                <div class="flex items-start space-x-3">
+                    <div class="mt-1">
+                        <i class="fas ${activity.type === 'quiz' ? 'fa-check-circle text-green-500' : 'fa-play-circle text-blue-500'}"></i>
+                    </div>
+                    <div>
+                        <p class="text-sm font-medium">${activity.title}</p>
+                        <p class="text-xs text-gray-500">${activity.time}</p>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Chatbot functionality
+        function toggleChatbot() {
+            const chatbot = document.getElementById('chatbot');
+            const chatbotToggle = document.getElementById('chatbotToggle');
+            chatbot.classList.toggle('hidden');
+            chatbotToggle.classList.toggle('hidden');
+        }
+
+        function initializeChatbot() {
+            addBotMessage("Hello! I'm your Subject Assistant. How can I help you with your studies today?");
+        }
+
+        function addBotMessage(message) {
+            const chatMessages = document.getElementById('chatMessages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'flex items-start space-x-2';
+            messageDiv.innerHTML = `
+                <div class="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center">
+                    <i class="fas fa-robot text-white text-sm"></i>
+                </div>
+                <div class="bg-gray-100 rounded-lg p-3 max-w-[80%]">
+                    <p class="text-sm">${message}</p>
+                </div>
+            `;
+            chatMessages.appendChild(messageDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        function addUserMessage(message) {
+            const chatMessages = document.getElementById('chatMessages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'flex items-start space-x-2 justify-end';
+            messageDiv.innerHTML = `
+                <div class="bg-blue-600 text-white rounded-lg p-3 max-w-[80%]">
+                    <p class="text-sm">${message}</p>
+                </div>
+            `;
+            chatMessages.appendChild(messageDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        function sendMessage() {
+            const input = document.getElementById('chatInput');
+            const message = input.value.trim();
+            if (message) {
+                addUserMessage(message);
+                input.value = '';
+                
+                // Simulate bot response
+                setTimeout(() => {
+                    const response = getBotResponse(message);
+                    addBotMessage(response);
+                }, 1000);
+            }
+        }
+
+        function getBotResponse(message) {
+            const responses = {
+                'hello': 'Hi! How can I help you with your studies today?',
+                'help': 'I can help you with understanding course materials, assignments, and provide study tips. What would you like to know?',
+                'programming': 'What specific programming concept would you like to learn about? I can help with Python, Java, or general programming concepts.',
+                'database': 'I can help you understand database concepts, SQL queries, and database design principles. What\'s your question?',
+                'assignment': 'I can help you understand your assignments and provide guidance. Which subject is the assignment for?'
+            };
+
+            const lowerMessage = message.toLowerCase();
+            for (const [key, response] of Object.entries(responses)) {
+                if (lowerMessage.includes(key)) {
+                    return response;
+                }
+            }
+
+            return "I'm here to help with your studies. You can ask me about specific subjects, concepts, or assignments.";
+        }
+
+        // Logout function
+        function logout() {
+            localStorage.removeItem('isLoggedIn');
+            localStorage.removeItem('userRole');
+            localStorage.removeItem('userData');
+            window.location.href = 'index.html';
+        }
+
+        // Handle chat input with Enter key
+        document.getElementById('chatInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        });
+
+        // Course Grid Functions
+        let courses = JSON.parse(localStorage.getItem('courses')) || [
+            {
+                id: '1',
+                title: 'Introduction to Programming',
+                category: 'programming',
+                students: 120,
+                description: 'Learn the fundamentals of programming with Python.',
+                image: 'https://images.pexels.com/photos/546819/pexels-photo-546819.jpeg',
+                rating: 4.5
+            },
+            {
+                id: '2',
+                title: 'UI/UX Design Fundamentals',
+                category: 'design',
+                students: 85,
+                description: 'Master the principles of user interface and experience design.',
+                image: 'https://images.pexels.com/photos/1109543/pexels-photo-1109543.jpeg',
+                rating: 4.0
+            },
+            {
+                id: '3',
+                title: 'Business Management',
+                category: 'business',
+                students: 210,
+                description: 'Essential skills for modern business leaders and entrepreneurs.',
+                image: 'https://images.pexels.com/photos/3184465/pexels-photo-3184465.jpeg',
+                rating: 5.0
+            }
+        ];
+
+        // Render courses in the grid
+        function renderCourses(filteredCourses = null) {
+            const courseGrid = document.getElementById('courseGrid');
+            courseGrid.innerHTML = '';
+            
+            const coursesToRender = filteredCourses || courses;
+            
+            coursesToRender.forEach(course => {
+                const courseCard = document.createElement('div');
+                courseCard.className = 'bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300';
+                courseCard.innerHTML = `
+                    <div class="h-48 overflow-hidden">
+                        <img class="w-full h-full object-cover" src="${course.image}" alt="${course.title}">
+                    </div>
+                    <div class="p-6">
+                        <div>
+                            <span class="inline-block px-2 py-1 text-xs font-semibold rounded-full ${getCategoryColor(course.category)}">
+                                ${course.category.charAt(0).toUpperCase() + course.category.slice(1)}
+                            </span>
+                            <h3 class="mt-2 text-lg font-semibold text-gray-900">${course.title}</h3>
+                        </div>
+                        <p class="mt-2 text-sm text-gray-600">${course.description}</p>
+                        <div class="mt-4 flex items-center justify-between">
+                            <div class="flex items-center">
+                                <div class="flex items-center">
+                                    ${renderRatingStars(course.rating)}
+                                </div>
+                                <span class="ml-2 text-sm text-gray-600">${course.rating.toFixed(1)} (${course.students})</span>
+                            </div>
+                            <button onclick="openEnrollmentModal('${course.id}')" class="px-4 py-2 bg-[#0B1F51] text-white text-sm font-medium rounded-md hover:bg-[#0a1b45] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#0B1F51]">
+                                Enroll Now
+                            </button>
+                        </div>
+                    </div>
+                `;
+                courseGrid.appendChild(courseCard);
+            });
+        }
+
+        // Apply filters
+        function applyFilters() {
+            const categoryFilter = document.getElementById('categoryFilter').value;
+            
+            let filteredCourses = [...courses];
+            
+            if (categoryFilter !== 'all') {
+                filteredCourses = filteredCourses.filter(course => course.category === categoryFilter);
+            }
+            
+            renderCourses(filteredCourses);
+        }
+
+        // Helper function to get category color
+        function getCategoryColor(category) {
+            switch (category) {
+                case 'programming': return 'bg-blue-100 text-blue-800';
+                case 'design': return 'bg-purple-100 text-purple-800';
+                case 'business': return 'bg-green-100 text-green-800';
+                default: return 'bg-gray-100 text-gray-800';
+            }
+        }
+
+        // Helper function to render rating stars
+        function renderRatingStars(rating) {
+            let stars = '';
+            const fullStars = Math.floor(rating);
+            const hasHalfStar = rating % 1 >= 0.5;
+            
+            for (let i = 0; i < fullStars; i++) {
+                stars += '<i class="fas fa-star text-yellow-400"></i>';
+            }
+            
+            if (hasHalfStar) {
+                stars += '<i class="fas fa-star-half-alt text-yellow-400"></i>';
+            }
+            
+            const emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0);
+            for (let i = 0; i < emptyStars; i++) {
+                stars += '<i class="far fa-star text-yellow-400"></i>';
+            }
+            
+            return stars;
+        }
+
+        // Enrollment Modal Functions
+        function openEnrollmentModal(courseId) {
+            selectedCourseId = courseId;
+            const course = courses.find(c => c.id === courseId);
+            
+            if (course) {
+                document.getElementById('modalTitle').textContent = `Enroll in ${course.title}`;
+                document.getElementById('modalDescription').textContent = `You are about to enroll in "${course.title}". Confirm to proceed.`;
+                document.getElementById('enrollmentModal').classList.remove('hidden');
+            }
+        }
+
+        function closeEnrollmentModal() {
+            document.getElementById('enrollmentModal').classList.add('hidden');
+        }
+
+        function confirmEnrollment() {
+            const courseIndex = courses.findIndex(c => c.id === selectedCourseId);
+            
+            if (courseIndex !== -1) {
+                courses[courseIndex].students += 1;
+                localStorage.setItem('courses', JSON.stringify(courses));
+                
+                alert(`Successfully enrolled in "${courses[courseIndex].title}"!`);
+                closeEnrollmentModal();
+                renderCourses();
+            }
+        }
+
+        // Initialize course grid
+        document.addEventListener('DOMContentLoaded', function() {
+            renderCourses();
+        });
+    </script>
+</body>
+</html>

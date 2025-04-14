@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Crown Institute</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body class="bg-gray-50">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-lg">
+        <div class="max-w-6xl mx-auto px-4">
+            <div class="flex justify-between">
+                <div class="flex space-x-7">
+                    <a href="index.html" class="flex items-center py-2 px-2">
+                        <img src="pictures/Crown.jpg" alt="Crown Institute Logo" class="h-16 w-16">
+                        <div class="ml-2">
+                            <span class="font-bold text-xl text-[#0B1F51] block">Crown Institute</span>
+                            <span class="text-sm text-[#FFB800] italic">From Possibility to Actuality</span>
+                        </div>
+                    </a>
+                </div>
+                <div class="hidden md:flex items-center space-x-1">
+                    <a href="index.html" class="py-4 px-2 text-gray-500 font-semibold hover:text-[#0B1F51] transition duration-300">Home</a>
+                    <a href="courses.html" class="py-4 px-2 text-gray-500 font-semibold hover:text-[#0B1F51] transition duration-300">Courses</a>
+                    <a href="signup.html" class="py-2 px-4 bg-[#FFB800] text-[#0B1F51] font-semibold rounded-lg hover:bg-[#e5a600] transition duration-300">Sign Up</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Login Form -->
+    <div class="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+        <div class="max-w-md w-full space-y-8">
+            <div>
+                <div class="flex justify-center">
+                    <img src="pictures/Crown.jpg" alt="Crown Institute Logo" class="h-24 w-24">
+                </div>
+                <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900">
+                    Sign in to your account
+                </h2>
+                <p class="mt-2 text-center text-sm text-gray-600">
+                    Or <a href="signup.html" class="font-medium text-blue-900 hover:text-blue-800">create a new account</a>
+                </p>
+            </div>
+            <form class="mt-8 space-y-6" id="loginForm">
+                <div class="space-y-4">
+                    <!-- Role Selection -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Account Type</label>
+                        <div class="mt-2 grid grid-cols-2 gap-3">
+                            <div class="relative">
+                                <input class="peer hidden" id="student" name="accountType" type="radio" value="student" checked>
+                                <label for="student" class="block cursor-pointer rounded-lg border border-gray-300 bg-white py-2 px-3 text-center hover:bg-gray-50 focus:outline-none peer-checked:border-[#FFB800] peer-checked:bg-[#FFB800] peer-checked:text-[#0B1F51] peer-checked:ring-1 peer-checked:ring-[#FFB800]">
+                                    <span class="text-sm font-medium text-gray-900 peer-checked:text-[#0B1F51]">Student</span>
+                                </label>
+                                <div class="absolute top-0 right-0 mt-1 mr-1 hidden peer-checked:block">
+                                    <i class="fas fa-check-circle text-[#FFB800]"></i>
+                                </div>
+                            </div>
+                            <div class="relative">
+                                <input class="peer hidden" id="teacher" name="accountType" type="radio" value="teacher">
+                                <label for="teacher" class="block cursor-pointer rounded-lg border border-gray-300 bg-white py-2 px-3 text-center hover:bg-gray-50 focus:outline-none peer-checked:border-[#FFB800] peer-checked:bg-[#FFB800] peer-checked:text-[#0B1F51] peer-checked:ring-1 peer-checked:ring-[#FFB800]">
+                                    <span class="text-sm font-medium text-gray-900 peer-checked:text-[#0B1F51]">Teacher</span>
+                                </label>
+                                <div class="absolute top-0 right-0 mt-1 mr-1 hidden peer-checked:block">
+                                    <i class="fas fa-check-circle text-[#FFB800]"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Dynamic Input Field -->
+                    <div>
+                        <label id="loginLabel" for="loginInput" class="block text-sm font-medium text-gray-700">School ID</label>
+                        <input id="loginInput" name="loginInput" type="text" required class="mt-1 appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-blue-900 focus:border-blue-900 focus:z-10 sm:text-sm" placeholder="Enter your School ID">
+                    </div>
+
+                    <!-- Password Field -->
+                    <div>
+                        <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
+                        <input id="password" name="password" type="password" required class="mt-1 appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-blue-900 focus:border-blue-900 focus:z-10 sm:text-sm" placeholder="Enter your password">
+                    </div>
+                </div>
+
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center">
+                    <input id="remember-me" name="remember-me" type="checkbox" class="h-4 w-4 text-[#0B1F51] focus:ring-[#0B1F51] border-gray-300 rounded">
+                        <label for="remember-me" class="ml-2 block text-sm text-gray-900">
+                            Remember me
+                        </label>
+                    </div>
+
+                    <div class="text-sm">
+                        <a href="#" class="font-medium text-[#0B1F51] hover:text-[#0a1b45]">
+                            Forgot your password?
+                        </a>
+                    </div>
+                </div>
+
+                <div>
+                    <button type="submit" class="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-[#0B1F51] hover:bg-[#0a1b45] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#0B1F51]">
+                        <span class="absolute left-0 inset-y-0 flex items-center pl-3">
+                            <i class="fas fa-sign-in-alt"></i>
+                        </span>
+                        Sign in
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white">
+        <div class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
+                <div>
+                    <div class="flex items-center">
+                        <img src="pictures/logo.svg" alt="Crown Institute Logo" class="h-10 w-10">
+                        <h3 class="ml-2 text-sm font-semibold text-gray-400 tracking-wider uppercase">Crown Institute</h3>
+                    </div>
+                    <p class="mt-4 text-base text-gray-300">
+                        From Possibility to Actuality
+                    </p>
+                </div>
+                <div>
+                    <h3 class="text-sm font-semibold text-gray-400 tracking-wider uppercase">Navigation</h3>
+                    <ul class="mt-4 space-y-4">
+                        <li><a href="index.html" class="text-base text-gray-300 hover:text-white">Home</a></li>
+                        <li><a href="courses.html" class="text-base text-gray-300 hover:text-white">Courses</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-sm font-semibold text-gray-400 tracking-wider uppercase">Legal</h3>
+                    <ul class="mt-4 space-y-4">
+                        <li><a href="#" class="text-base text-gray-300 hover:text-white">Privacy Policy</a></li>
+                        <li><a href="#" class="text-base text-gray-300 hover:text-white">Terms of Service</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-sm font-semibold text-gray-400 tracking-wider uppercase">Connect</h3>
+                    <div class="mt-4 flex space-x-6">
+                        <a href="#" class="text-gray-400 hover:text-white">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white">
+                            <i class="fab fa-linkedin-in"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="mt-12 border-t border-gray-700 pt-8">
+                <p class="text-base text-gray-400 text-center">
+                    &copy; 2024 Crown Institute. All rights reserved.
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Handle input field label and type changes based on role selection
+        document.querySelectorAll('input[name="accountType"]').forEach(radio => {
+            radio.addEventListener('change', function() {
+                const loginLabel = document.getElementById('loginLabel');
+                const loginInput = document.getElementById('loginInput');
+                
+                if (this.value === 'student') {
+                    loginLabel.textContent = 'School ID';
+                    loginInput.placeholder = 'Enter your School ID';
+                    loginInput.type = 'text';
+                } else {
+                    loginLabel.textContent = 'Teacher e-mail';
+                    loginInput.placeholder = 'Enter your e-mail address';
+                    loginInput.type = 'email';
+                }
+            });
+        });
+
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const loginInput = document.getElementById('loginInput').value;
+            const password = document.getElementById('password').value;
+            const accountType = document.querySelector('input[name="accountType"]:checked').value;
+            
+            // Mock authentication - in a real app, this would be an API call
+            if (accountType === 'teacher' && loginInput === 'teacher@school.edu' && password === 'teacher123') {
+                localStorage.setItem('userRole', 'teacher');
+                localStorage.setItem('isLoggedIn', 'true');
+                window.location.href = 'teacher-dashboard.html';
+            } else if (accountType === 'student' && loginInput === 'STU001' && password === 'student123') {
+                localStorage.setItem('userRole', 'student');
+                localStorage.setItem('isLoggedIn', 'true');
+                window.location.href = 'student-dashboard.html';
+            } else {
+                alert('Invalid credentials. Please try again.');
+            }
+        });
+    </script>
+</body>
+</html>
